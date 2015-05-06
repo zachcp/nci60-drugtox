@@ -9,10 +9,9 @@ if (!file.exists(lcl)) {
     download.file(src, lcl)
 }
 
-
-headers = c("NSC.id","Drug.name","FDA.status","Mechanism.of.action","PubChem.id",
-            "Total.probes","Total.after.quality.control", "Failure.reason",
-            "Experiment.name","BR.MCF7","BR.MDA_MB_231","BR.HS578T","BR.BT_549",
+headers = c("NSC.id","drug","FDA.status","mechanism","pubchem",
+            "total.probes","total.after.quality.control", "failure.reason",
+            "experiment","BR.MCF7","BR.MDA_MB_231","BR.HS578T","BR.BT_549",
             "BR.T47D","CNS.SF_268","CNS.SF_295","CNS.SF_539","CNS.SNB_19",
             "CNS.SNB_75", "CNS.U251","CO.COLO205","CO.HCC_2998","CO.HCT_116",
             "CO.HCT_15","CO.HT29","CO.KM12","CO.SW_620","LE.CCRF_CEM",
@@ -31,10 +30,9 @@ names(nci60.drugs) <- headers
 nci60.drugs <- nci60.drugs %>% select(-X)
 save(nci60.drugs, file="data/nci60drugs.rda")
 
-df <- melt(nci60.drugs, id.vars = c("NSC.id","Drug.name","FDA.status","Mechanism.of.action","PubChem.id",
-                            "Total.probes","Total.after.quality.control", "Failure.reason",
-                            "Experiment.name"),value.name = "Toxicity", 
-                measure.vars = c("BR.MCF7","BR.MDA_MB_231","BR.HS578T","BR.BT_549",
+df <- melt(nci60.drugs, id.vars = c("NSC.id","drug","pubchem","experiment"),
+           value.name = "toxicity", 
+            measure.vars = c("BR.MCF7","BR.MDA_MB_231","BR.HS578T","BR.BT_549",
             "BR.T47D","CNS.SF_268","CNS.SF_295","CNS.SF_539","CNS.SNB_19",
             "CNS.SNB_75", "CNS.U251","CO.COLO205","CO.HCC_2998","CO.HCT_116",
             "CO.HCT_15","CO.HT29","CO.KM12","CO.SW_620","LE.CCRF_CEM",
@@ -48,9 +46,17 @@ df <- melt(nci60.drugs, id.vars = c("NSC.id","Drug.name","FDA.status","Mechanism
             "RE.ACHN","RE.CAKI_1","RE.RXF_393","RE.SN12C","RE.TK_10"))
 
 #remove NAs and trun Toxicity into numeric
-df <- df %>% filter(Toxicity != "na")
-df$Toxicity <- as.numeric(df$Toxicity)
+names(df)[names(df) == "variable"] <- "cell.line"
+df <- df %>% filter(toxicity != "na")
+df$toxicity <- as.numeric(df$toxicity)
+df <- df %>% left_join(cellmeta,by="cell.line")
+nci60 <- df
 
-save(df, file="data/nci60_master.rda")
+nci60 <- nci60 %>% select(NSC.id,drug, cell.line, toxicity, 
+                          tissue, age, sex, prior.treatment, epithelial, 
+                          histology, source, ploidy,p53, mdr, doubling.time,
+                          institute)
+
+save(nci60, file="data/nci60_master.rda")
 
 #drugdata <- nci60.drugs %>% select(NSC.id,Drug.name,FDA.status,Mechanism.of.action,PubChem.id)
