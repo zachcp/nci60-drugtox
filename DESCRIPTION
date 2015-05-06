@@ -1,0 +1,13 @@
+Package: NCI60-drugs
+Type: Package
+Title: NCI-60 Drug Toxicity Data
+Version: 0.1.0
+Date: 2015-05-06
+Authors@R: 'Zach Charlop-Powers <zcharlop@rockefeller.edu> [aut,cre]'
+Description: More about what it does (maybe more than one line)
+License: CC0
+LazyData: true
+Depends:
+  R (>= 2.10)
+Suggests:
+  dplyr
