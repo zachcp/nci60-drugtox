@@ -7,12 +7,13 @@ if (!file.exists(lcl)) {
     download.file(src, lcl)
 }
 
-headers = c("Cell.Line.Name", "tissue.of.origin", "age", "sex",
-            "prior.treatment", "Epithelial", "histology", "source",
-            "ploidy", "p53","mdr", "doubling.time","Institute",
-            "Contributor", "Reference")
+headers = c("cell.line", "tissue", "age", "sex",
+            "prior.treatment", "epithelial", "histology", "source",
+            "ploidy", "p53","mdr", "doubling.time","institute",
+            "contributor", "reference")
 
 cellmeta <- read.delim(lcl, skip=7) %>% slice(1:60)
 names(cellmeta) <- headers
+cellmeta$cell.line <- gsub(":",".",cellmeta$cell.line)
 
 save(cellmeta, file = "data/cellmeta.rda")
