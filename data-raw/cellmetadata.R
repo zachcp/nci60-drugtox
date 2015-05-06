@@ -12,7 +12,7 @@ headers = c("Cell.Line.Name", "tissue.of.origin", "age", "sex",
             "ploidy", "p53","mdr", "doubling.time","Institute",
             "Contributor", "Reference")
 
-cellmeta <- read.delim(lcl, skip=7)
+cellmeta <- read.delim(lcl, skip=7) %>% slice(1:60)
 names(cellmeta) <- headers
 
 save(cellmeta, file = "data/cellmeta.rda")
