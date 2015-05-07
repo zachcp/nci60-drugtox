@@ -1,4 +1,4 @@
-Package: NCI60-drugs
+Package: NCI60.drugtox
 Type: Package
 Title: NCI-60 Drug Toxicity Data
 Version: 0.1.0
