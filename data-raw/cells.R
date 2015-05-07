@@ -1,7 +1,7 @@
 library(dplyr)
 
 src <- "http://discover.nci.nih.gov/cellminer/samples/CELLMINER_CELL_LINE_METADATA.txt"
-lcl <- "data-raw/cellmetadata.txt"
+lcl <- "data-raw/cells.txt"
 
 if (!file.exists(lcl)) {
     download.file(src, lcl)
@@ -12,8 +12,8 @@ headers = c("cell.line", "tissue", "age", "sex",
             "ploidy", "p53","mdr", "doubling.time","institute",
             "contributor", "reference")
 
-cellmeta <- read.delim(lcl, skip=7) %>% slice(1:60)
-names(cellmeta) <- headers
-cellmeta$cell.line <- gsub(":",".",cellmeta$cell.line)
+cells <- read.delim(lcl, skip=7) %>% slice(1:60)
+names(cells) <- headers
+cells$cell.line <- gsub(":",".",cells$cell.line)
 
-save(cellmeta, file = "data/cellmeta.rda")
+save(cells, file = "data/cells.rda")
