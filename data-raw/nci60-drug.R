@@ -1,7 +1,7 @@
 library(dplyr)
 library(reshape2)
 
-load("data/cellmeta.rda")
+load("data/cells.rda")
 
 src <- "http://discover.nci.nih.gov/cellminerdata/rawdata/DTP_NCI60_RAW.zip"
 lcl <- "data-raw/DTP_NCI60_RAW.zip"
@@ -49,14 +49,14 @@ df <- melt(nci60.drugs, id.vars = c("NSC.id","drug","pubchem","experiment"),
 names(df)[names(df) == "variable"] <- "cell.line"
 df <- df %>% filter(toxicity != "na")
 df$toxicity <- as.numeric(df$toxicity)
-df <- df %>% left_join(cellmeta,by="cell.line")
+df <- df %>% left_join(cells,by="cell.line")
 nci60 <- df
 
-nci60 <- nci60 %>% select(NSC.id,drug, cell.line, toxicity, 
+nci60 <- nci60 %>% select(NSC.id,drug, pubchem, cell.line, toxicity, 
                           tissue, age, sex, prior.treatment, epithelial, 
                           histology, source, ploidy,p53, mdr, doubling.time,
                           institute)
 
-save(nci60, file="data/nci60_master.rda")
+save(nci60, file="data/nci60.rda")
 
 #drugdata <- nci60.drugs %>% select(NSC.id,Drug.name,FDA.status,Mechanism.of.action,PubChem.id)
